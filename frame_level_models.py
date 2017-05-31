@@ -216,13 +216,17 @@ class LstmModel(models.BaseModel):
     number_of_layers = FLAGS.lstm_layers
     keep_prob = FLAGS.keep_prob
 
-    stacked_lstm = tf.contrib.rnn.MultiRNNCell(
-            [
-                tf.contrib.rnn.DropoutWrapper(
-                    tf.contrib.rnn.BasicLSTMCell(
-                        lstm_size, forget_bias=1.0), output_keep_prob = keep_prob)
-                for _ in range(number_of_layers)
-                ])
+    lstm = tf.contrib.rnn.BasicLSTMCell(lstm_size, forget_bias=1.0)
+    drop = tf.contrib.rnn.DropoutWrapper(lstm, output_keep_prob = keep_prob)
+    stacked_lstm = tf.contrib.rnn.MultiRNNCell([drop] * number_of_layers)
+
+    #stacked_lstm = tf.contrib.rnn.MultiRNNCell(
+            #[
+                #tf.contrib.rnn.DropoutWrapper(
+                    #tf.contrib.rnn.BasicLSTMCell(
+                        #lstm_size, forget_bias=1.0), output_keep_prob = keep_prob)
+                #for _ in range(number_of_layers)
+                #])
 
     loss = 0.0
 
