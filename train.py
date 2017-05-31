@@ -231,6 +231,8 @@ def build_graph(reader,
     num_towers = 1
     device_string = '/cpu:%d'
 
+  logging.info("Using learning_rate " + str(base_learning_rate) + " and batch_size " + str(batch_size))
+
   learning_rate = tf.train.exponential_decay(
       base_learning_rate,
       global_step * batch_size * num_towers,

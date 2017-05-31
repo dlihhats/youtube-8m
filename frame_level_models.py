@@ -46,6 +46,7 @@ flags.DEFINE_string("video_level_classifier_model", "MoeModel",
                     "classifier layer")
 flags.DEFINE_integer("lstm_cells", 1024, "Number of LSTM cells.")
 flags.DEFINE_integer("lstm_layers", 2, "Number of LSTM layers.")
+flags.DEFINE_float("keep_prob", 0.7, "Keep probability for dropout.")
 
 class FrameLevelLogisticModel(models.BaseModel):
 
@@ -213,11 +214,13 @@ class LstmModel(models.BaseModel):
     """
     lstm_size = FLAGS.lstm_cells
     number_of_layers = FLAGS.lstm_layers
+    keep_prob = FLAGS.keep_prob
 
     stacked_lstm = tf.contrib.rnn.MultiRNNCell(
             [
-                tf.contrib.rnn.BasicLSTMCell(
-                    lstm_size, forget_bias=1.0)
+                tf.contrib.rnn.DropoutWrapper(
+                    tf.contrib.rnn.BasicLSTMCell(
+                        lstm_size, forget_bias=1.0), output_keep_prob = keep_prob)
                 for _ in range(number_of_layers)
                 ])
 
