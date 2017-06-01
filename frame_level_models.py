@@ -79,11 +79,9 @@ class FrameLevelLogisticModel(models.BaseModel):
                                axis=[1]) / denominators
 
     fc1 = slim.fully_connected(
-        avg_pooled, vocab_size*3, activation_fn=tf.nn.relu,
-        weights_regularizer=slim.l2_regularizer(1e-8))
+        avg_pooled, 1024, activation_fn=tf.nn.relu)
     fc2 = slim.fully_connected(
-        fc1, vocab_size*2, activation_fn=tf.nn.relu,
-        weights_regularizer=slim.l2_regularizer(1e-8))
+        fc1, 512, activation_fn=tf.nn.relu)
 
     output = slim.fully_connected(
         fc2, vocab_size, activation_fn=tf.nn.sigmoid,
