@@ -78,8 +78,15 @@ class FrameLevelLogisticModel(models.BaseModel):
     avg_pooled = tf.reduce_sum(model_input,
                                axis=[1]) / denominators
 
+    fc1 = slim.fully_connected(
+        avg_pooled, vocab_size*3, activation_fn=tf.nn.relu,
+        weights_regularizer=slim.l2_regularizer(1e-8))
+    fc2 = slim.fully_connected(
+        fc1, vocab_size*2, activation_fn=tf.nn.sigmoid,
+        weights_regularizer=slim.l2_regularizer(1e-8))
+
     output = slim.fully_connected(
-        avg_pooled, vocab_size, activation_fn=tf.nn.sigmoid,
+        fc2, vocab_size, activation_fn=tf.nn.sigmoid,
         weights_regularizer=slim.l2_regularizer(1e-8))
     return {"predictions": output}
 
